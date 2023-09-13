@@ -1,0 +1,23 @@
+{% set alerts = get_flashed_messages(with_categories=True) %}
+<style>
+    .alert-container{
+        position: fixed;
+        top: 50px;
+        right: 50px;
+        z-index: 9999;
+    }
+    .alert-container > .alert{
+        width: 100%;
+        max-width: 300px;
+    }
+</style>
+{% if alerts|length %}
+    <div class="alert-container">
+        {% for category, message in alerts %}
+            <div class="alert alert-{{category}}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endif %}

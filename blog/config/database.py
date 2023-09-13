@@ -2,25 +2,16 @@ from mysql.connector import connect
 
 def get_connection():
     try:
-        db=connect(
+        db = connect(
             host = "localhost",
-            port = 3306,
-            user = "root",
-            password= "",
-            database= "flask_blog"
+            port=3306,
+            user="root",
+            password="",
+            database="flask_blog"
         )
+        if db.is_connected(): print("DATABASE CONNECTED")
 
-        if db.is_connected: print("DATABASE CONNECTED")
-
-        cursor = db.cursor(dictionary=True, buffered=True )
+        cursor = db.cursor(dictionary=True, buffered=True)
         return db, cursor
-
-
     except Exception as e:
-        print("DATABASE ERROR: ", str(e))
-
-
-
-
-
-
+        print("DATABASE ERROR", str(e))

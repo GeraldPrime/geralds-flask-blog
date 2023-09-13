@@ -1,26 +1,29 @@
-from flask import Flask, render_template, url_for, flash, get_flashed_messages, request
+from flask import Flask, request, render_template, redirect, url_for, flash, get_flashed_messages
+import os, datetime
 from .config.variables import SECRET_KEY
 
+
 def create_app():
-    app = Flask(__name__)
+    blog = Flask(__name__)
 
+    # CONFIG
+    blog.config['SECRET_KEY'] = SECRET_KEY
 
-    #CONFIGS
-    app.config["SECRET_KEY"] = SECRET_KEY
+    # BLUEPRINT
+    from .views.admin_auth import admin_auth
+    blog.register_blueprint(admin_auth, url_prefix="/owner")
 
+    # ERROR ROUTES
+    # 404 - ERRORS
+    @blog.errorhandler(404)
+    def error_404(error):
+        print("404 ERROR: ", str(error))
+        return render_template("error-404.html")
 
-    # BLUEPRINTS
-    from .views.admin_auth import admin
-    app.register_blueprint(admin, url_prefix="/owner")
+    # 500 - ERROR
+    # @blog.errorhandler(Exception)
+    # def error_500(error):
+    #     print("500 ERROR: ", str(error))
+    #     return render_template("error-500.html")
 
-
-    @app.errorhandler(404)
-    def errorhandler(error):
-        return render_template("admin/error-404.html")
-    
-    @app.errorhandler(Exception)
-    def errorhandler(error):
-        print("500 ERROR", str(error))
-        return render_template("admin/error-500.html")
-
-    return app
+    return blog
